@@ -45,5 +45,4 @@ Active work. Update as items are completed and new work is identified.
 
 ## Housekeeping
 
-- [ ] Initial git commit (repo has zero commits) — when ready
-- [ ] Decide whether to commit CODE_MAP family + docs/ai
+- [x] Initial git commit — 2026-06-08

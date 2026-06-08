@@ -6,7 +6,7 @@ Running history of what's been built and current state. Update after major chang
 
 **Status:** Active Development
 **Last Updated:** 2026-06-08
-**Version:** pre-launch, not yet committed to git (no commits on `main`)
+**Version:** pre-launch; committed to git (initial commit on `main`)
 
 ### What's Working
 - Next.js 16 (App Router) + TypeScript + Tailwind v4 + MDX skeleton; `npm run build` passes.
