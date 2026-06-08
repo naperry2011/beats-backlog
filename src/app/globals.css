@@ -1,0 +1,232 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/*
+  Beats and Backlog — "aged record-sleeve zine."
+  Ukiyo-e woodblock print fused with crate-digger liner notes.
+  Bold, textured chrome; calm, readable article bodies (writing-first).
+  Palette: aged paper, aizome indigo, sumi ink, ochre gold, muted vermillion.
+  Prince purple is reserved for the tribute page only.
+*/
+@theme {
+  --color-paper: #ece1c4;
+  --color-paper-deep: #e2d4b0;
+  --color-card: #e8dcbe;
+  --color-ink: #181410;
+  --color-ink-soft: #5a4e3b;
+  --color-indigo: #213a5c;
+  --color-indigo-deep: #14233a;
+  --color-ochre: #c08a1e;
+  --color-vermillion: #b23a25;
+  --color-purple: #5a2a82;
+
+  --font-poster: var(--ff-poster), "Arial Narrow", sans-serif;
+  --font-display: var(--ff-body), Georgia, serif;
+  --font-body: var(--ff-body), Georgia, serif;
+  --font-mono: var(--ff-mono), ui-monospace, "Courier New", monospace;
+
+  --animate-spin-slow: spin 28s linear infinite;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  /* Faint aged-paper foxing: warm blooms, never flat. */
+  background-image:
+    radial-gradient(
+      ellipse 60% 50% at 15% 0%,
+      rgba(192, 138, 30, 0.1),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 50% 40% at 95% 25%,
+      rgba(178, 58, 37, 0.07),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 70% 60% at 50% 110%,
+      rgba(33, 58, 92, 0.09),
+      transparent 70%
+    );
+  background-attachment: fixed;
+}
+
+/* Lofi grain — the visual version of vinyl crackle, over everything. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---- Pattern toolkit -------------------------------------------------- */
+
+/* Halftone dots — boom-bap / newsprint texture. */
+.halftone {
+  background-image: radial-gradient(currentColor 1.1px, transparent 1.3px);
+  background-size: 6px 6px;
+}
+
+/* Seigaiha (青海波) — the classic ukiyo-e wave scallop. */
+.seigaiha {
+  background-image: radial-gradient(
+    circle at 50% 100%,
+    transparent 31%,
+    currentColor 32%,
+    currentColor 35%,
+    transparent 36%,
+    transparent 48%,
+    currentColor 49%,
+    currentColor 52%,
+    transparent 53%,
+    transparent 65%,
+    currentColor 66%,
+    currentColor 69%,
+    transparent 70%
+  );
+  background-size: 44px 22px;
+}
+
+/* Hanko seal — the vermillion stamp. */
+.hanko {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-vermillion);
+  color: var(--color-paper);
+  box-shadow: inset 0 0 0 2px rgba(236, 225, 196, 0.35);
+  transform: rotate(-6deg);
+}
+
+/* Washi-tape strip for the zine feel. */
+.tape {
+  position: relative;
+  background: rgba(192, 138, 30, 0.28);
+  box-shadow: 0 1px 2px rgba(24, 20, 16, 0.15);
+}
+.tape::before,
+.tape::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  background: inherit;
+}
+.tape::before {
+  left: -7px;
+  clip-path: polygon(100% 0, 0 22%, 100% 45%, 0 70%, 100% 100%);
+}
+.tape::after {
+  right: -7px;
+  clip-path: polygon(0 0, 100% 22%, 0 45%, 100% 70%, 0 100%);
+}
+
+/* Letterpress ink — slight emboss on heavy display type. */
+.ink-press {
+  text-shadow: 0 1px 0 rgba(236, 225, 196, 0.4);
+}
+
+/* Underline that reads like a brush sweep, drawn on load/hover. */
+.brush-link {
+  background-image: linear-gradient(
+    var(--color-vermillion),
+    var(--color-vermillion)
+  );
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 2px;
+  transition: background-size 0.3s ease;
+}
+.brush-link:hover {
+  background-size: 100% 2px;
+}
+
+/* ---- Motion ----------------------------------------------------------- */
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal {
+  opacity: 0;
+  animation: reveal-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: marquee 24s linear infinite;
+}
+
+/* Tribute page — slow Purple Rain aurora behind the portrait. */
+@keyframes aurora {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.08);
+  }
+}
+.tribute-glow {
+  animation: aurora 10s ease-in-out infinite;
+}
+
+/* The Backlog — a save-screen blinking cursor. */
+@keyframes blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+.blink {
+  animation: blink 1.1s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    animation: none;
+  }
+  .marquee-track,
+  .animate-spin-slow,
+  .tribute-glow,
+  .blink {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
