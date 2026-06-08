@@ -1,0 +1,60 @@
+# Beats and Backlog
+
+> A writing-first publication about video games, anime, and music — comfort, nostalgia, and limited hours, in a Samurai Champloo woodblock-and-vinyl aesthetic.
+
+## Project Overview
+
+**Tech Stack:** Next.js 16 (App Router), TypeScript, Tailwind v4, MDX (@next/mdx). Static-first (SSG), no database.
+**Status:** Active development, pre-launch (no git commits yet).
+**Purpose:** An indie publication that pays respect to the culture and holds the door for who's coming up. Voice is the moat.
+
+## Core Documentation
+
+- `README.md` — Setup and getting started
+- `CODE_MAP.md` — Feature-to-file map
+- `docs/ai/memory.md` — Project history and current state
+- `docs/ai/roadmap.md` — Forward-looking priorities
+- `docs/ai/tasks.md` — Active work
+- `docs/ai/decisions.md` — Architecture decisions (ADRs)
+- `docs/ai/architecture.md` — System design
+- `ENTRY_POINTS.md` — Where execution starts (routes)
+- `DATA_FLOW.md` — System-level data movement
+- `FEATURE_BOUNDARIES.md` — Component responsibilities
+- `beats-and-backlog-website-blueprint.md` — The original vision spec
+
+## Key Files by Area
+
+### Content & Data
+- `src/lib/posts.ts` — MDX discovery, frontmatter, reading-time, content types
+- `src/lib/columns.ts` — the 8-column registry
+- `src/lib/columnThemes.ts` — per-column identity (mood, accent, monogram, voice)
+- `content/posts/*.mdx` — the posts
+
+### Routes
+- `src/app/page.tsx` — home (Hero + Now Spinning + Latest + Columns)
+- `src/app/posts/[slug]/page.tsx` — article page
+- `src/app/columns/[column]/page.tsx` — column dispatcher (bespoke vs themed)
+- `src/app/tribute/page.tsx`, `src/app/about/page.tsx`
+
+### Columns & Components
+- `src/components/ColumnLayout.tsx`, `ColumnSeal.tsx` — themed shell + stamp
+- `src/components/NightcapColumn.tsx`, `ComfortModeColumn.tsx`, `BacklogColumn.tsx` — bespoke worlds
+- `src/components/Hero.tsx`, `Verdict.tsx`, `ThePour.tsx`, `PostCard.tsx`, `Divider.tsx`
+
+### Integrations & Config
+- `src/lib/igdb.ts` — IGDB game covers (Twitch OAuth, fail-soft)
+- `next.config.ts` — MDX + remark plugins + IGDB image host
+- `src/app/globals.css` — design tokens + pattern/motion classes
+- `mdx-components.tsx` — MDX → component map
+
+## Common Tasks
+
+**Add a post:** create `content/posts/<slug>.mdx` with frontmatter (title, date, column, excerpt, optional verdict/pour/nightcap).
+**Add/edit a column's look:** edit `src/lib/columnThemes.ts`; for a bespoke world, add a component + an id branch in `columns/[column]/page.tsx`.
+**Change a game cover:** set the `query` (and `since` year for remakes) in `src/components/BacklogColumn.tsx` SAGAS, or the post's `nightcap.game`.
+**Run dev:** `npm run dev` (used on port 3007 in this project). **Build:** `npm run build`.
+
+## Environment Variables
+
+- `TWITCH_CLIENT_ID` — Twitch app client id (IGDB auth)
+- `TWITCH_CLIENT_SECRET` — Twitch app secret (IGDB auth); keep in `.env.local`, rotate before launch
