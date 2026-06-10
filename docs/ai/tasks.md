@@ -24,6 +24,8 @@ Active work. Update as items are completed and new work is identified.
 
 ## Recently Completed
 
+- [x] Covers pass 2: crop fix (native ratios), anime covers (AniList), album art (iTunes) — 2026-06-09
+- [x] Vercel: project linked, Twitch env vars on Production, deployed (beats-backlog.vercel.app) — 2026-06-09
 - [x] Pin RE4 Remake + MGS Δ: Snake Eater covers via release-year filter — 2026-06-08
 - [x] IGDB cover integration (Twitch OAuth, graceful fallback) — 2026-06-08
 - [x] The Backlog bespoke save-select world — 2026-06-08
@@ -38,7 +40,7 @@ Active work. Update as items are completed and new work is identified.
 
 ## Tech Debt
 
-- [ ] Rotate Twitch credentials before launch; move to Vercel env — P1
+- [ ] Rotate Twitch credentials before launch (now live on Vercel Production too — update both .env.local and Vercel when rotating) — P1
 - [ ] `globals.css` token/class names are an untyped contract — document or guard before large renames — P3
 - [ ] Bespoke columns chosen by manual id branch in `columns/[column]/page.tsx` — fine for now; revisit if it grows — P3
 - [ ] Source images duplicated in `image/` and `src/images/tribute/` — prune `image/` if unused — P3
