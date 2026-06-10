@@ -3,6 +3,8 @@ import Image from "next/image";
 import type { PostMeta } from "@/lib/posts";
 import { verdictLabel } from "@/components/Verdict";
 import { getGameCover } from "@/lib/igdb";
+import { getAnimeCover } from "@/lib/anilist";
+import { getAlbumArt } from "@/lib/itunes";
 
 // The Nightcap gets its own late-night identity — lamp-lit, whiskey-warm, the
 // "drink before bed" mood. The signature ritual: one game, one anime, one track
@@ -92,6 +94,14 @@ const PILLARS = [
   { kanji: "聴", label: "One track", note: "to set the room" },
 ];
 
+// Native art ratios so nothing gets trimmed: IGDB box art is 264×374,
+// anime posters run 2:3, album art is square.
+const ART_RATIO: Record<string, string> = {
+  game: "aspect-[264/374]",
+  anime: "aspect-[2/3]",
+  track: "aspect-square",
+};
+
 function PourRow({
   kanji,
   kind,
@@ -103,11 +113,12 @@ function PourRow({
   value?: string;
   cover?: string | null;
 }) {
+  const ratio = ART_RATIO[kind.toLowerCase()] ?? "aspect-square";
   return (
     <div className="flex items-center gap-4 border-t border-[#d9a441]/20 py-4 first:border-t-0">
       <Hanko char={kanji} size="sm" />
       {cover && (
-        <div className="relative aspect-[3/4] w-12 shrink-0 overflow-hidden rounded ring-1 ring-white/15">
+        <div className={`relative ${ratio} w-12 shrink-0 overflow-hidden rounded ring-1 ring-white/15`}>
           <Image src={cover} alt={`${value ?? kind} cover`} fill sizes="48px" className="object-cover" />
         </div>
       )}
@@ -126,9 +137,11 @@ function PourRow({
 export async function NightcapColumn({ posts }: { posts: PostMeta[] }) {
   const featured = posts[0];
   const past = posts.slice(1);
-  const gameCover = featured?.nightcap?.game
-    ? await getGameCover(featured.nightcap.game)
-    : null;
+  const [gameCover, animeCover, trackArt] = await Promise.all([
+    featured?.nightcap?.game ? getGameCover(featured.nightcap.game) : null,
+    featured?.nightcap?.anime ? getAnimeCover(featured.nightcap.anime) : null,
+    featured?.nightcap?.track ? getAlbumArt(featured.nightcap.track) : null,
+  ]);
 
   return (
     <div
@@ -208,8 +221,8 @@ export async function NightcapColumn({ posts }: { posts: PostMeta[] }) {
 
               <div className="mt-5">
                 <PourRow kanji="遊" kind="Game" value={featured.nightcap?.game} cover={gameCover} />
-                <PourRow kanji="観" kind="Anime" value={featured.nightcap?.anime} />
-                <PourRow kanji="聴" kind="Track" value={featured.nightcap?.track} />
+                <PourRow kanji="観" kind="Anime" value={featured.nightcap?.anime} cover={animeCover} />
+                <PourRow kanji="聴" kind="Track" value={featured.nightcap?.track} cover={trackArt} />
               </div>
 
               <Link

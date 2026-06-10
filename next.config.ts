@@ -5,8 +5,14 @@ const nextConfig: NextConfig = {
   // Allow .md / .mdx alongside the usual page extensions.
   pageExtensions: ["ts", "tsx", "md", "mdx"],
   images: {
-    // IGDB cover art is served from this host.
-    remotePatterns: [{ protocol: "https", hostname: "images.igdb.com" }],
+    remotePatterns: [
+      // IGDB game cover art.
+      { protocol: "https", hostname: "images.igdb.com" },
+      // AniList anime cover art.
+      { protocol: "https", hostname: "s4.anilist.co" },
+      // iTunes album artwork (is1–is5 CDN shards).
+      { protocol: "https", hostname: "**.mzstatic.com" },
+    ],
   },
 };
 

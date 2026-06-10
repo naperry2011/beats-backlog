@@ -39,8 +39,9 @@ function initials(name: string): string {
 
 // Box art, or a hand-set placeholder when no cover is available.
 function Cover({ url, name }: { url: string | null; name: string }) {
+  // IGDB t_cover_big is 264×374 — match it exactly so nothing gets trimmed.
   return (
-    <div className="relative aspect-[3/4] w-16 shrink-0 overflow-hidden rounded ring-1 ring-white/15 sm:w-20">
+    <div className="relative aspect-[264/374] w-16 shrink-0 overflow-hidden rounded ring-1 ring-white/15 sm:w-20">
       {url ? (
         <Image src={url} alt={`${name} cover`} fill sizes="80px" className="object-cover" />
       ) : (
