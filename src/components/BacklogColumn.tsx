@@ -39,11 +39,12 @@ function initials(name: string): string {
 
 // Box art, or a hand-set placeholder when no cover is available.
 function Cover({ url, name }: { url: string | null; name: string }) {
-  // IGDB t_cover_big is 264×374 — match it exactly so nothing gets trimmed.
+  // Cover dimensions vary slightly per game — object-contain guarantees the
+  // full box art is always visible (letterboxed on the card's dark ground).
   return (
-    <div className="relative aspect-[264/374] w-16 shrink-0 overflow-hidden rounded ring-1 ring-white/15 sm:w-20">
+    <div className="relative aspect-[3/4] w-16 shrink-0 overflow-hidden rounded bg-black/40 ring-1 ring-white/15 sm:w-20">
       {url ? (
-        <Image src={url} alt={`${name} cover`} fill sizes="80px" className="object-cover" />
+        <Image src={url} alt={`${name} cover`} fill sizes="80px" className="object-contain" />
       ) : (
         <div
           className="flex h-full w-full items-center justify-center"

@@ -97,7 +97,7 @@ const PILLARS = [
 // Native art ratios so nothing gets trimmed: IGDB box art is 264×374,
 // anime posters run 2:3, album art is square.
 const ART_RATIO: Record<string, string> = {
-  game: "aspect-[264/374]",
+  game: "aspect-[3/4]",
   anime: "aspect-[2/3]",
   track: "aspect-square",
 };
@@ -118,8 +118,8 @@ function PourRow({
     <div className="flex items-center gap-4 border-t border-[#d9a441]/20 py-4 first:border-t-0">
       <Hanko char={kanji} size="sm" />
       {cover && (
-        <div className={`relative ${ratio} w-12 shrink-0 overflow-hidden rounded ring-1 ring-white/15`}>
-          <Image src={cover} alt={`${value ?? kind} cover`} fill sizes="48px" className="object-cover" />
+        <div className={`relative ${ratio} w-12 shrink-0 overflow-hidden rounded bg-black/40 ring-1 ring-white/15`}>
+          <Image src={cover} alt={`${value ?? kind} cover`} fill sizes="48px" className="object-contain" />
         </div>
       )}
       <div>
