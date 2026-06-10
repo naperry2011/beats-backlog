@@ -94,14 +94,6 @@ const PILLARS = [
   { kanji: "聴", label: "One track", note: "to set the room" },
 ];
 
-// Native art ratios so nothing gets trimmed: IGDB box art is 264×374,
-// anime posters run 2:3, album art is square.
-const ART_RATIO: Record<string, string> = {
-  game: "aspect-[3/4]",
-  anime: "aspect-[2/3]",
-  track: "aspect-square",
-};
-
 function PourRow({
   kanji,
   kind,
@@ -113,14 +105,20 @@ function PourRow({
   value?: string;
   cover?: string | null;
 }) {
-  const ratio = ART_RATIO[kind.toLowerCase()] ?? "aspect-square";
   return (
     <div className="flex items-center gap-4 border-t border-[#d9a441]/20 py-4 first:border-t-0">
       <Hanko char={kanji} size="sm" />
       {cover && (
-        <div className={`relative ${ratio} w-12 shrink-0 overflow-hidden rounded bg-black/40 ring-1 ring-white/15`}>
-          <Image src={cover} alt={`${value ?? kind} cover`} fill sizes="48px" className="object-contain" />
-        </div>
+        // No fixed frame — h-auto keeps each art's intrinsic ratio (game box,
+        // anime poster, square album) filled edge to edge, no crop or bars.
+        <Image
+          src={cover}
+          alt={`${value ?? kind} cover`}
+          width={264}
+          height={374}
+          sizes="48px"
+          className="h-auto w-12 shrink-0 rounded ring-1 ring-white/15"
+        />
       )}
       <div>
         <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#caa6e0]">

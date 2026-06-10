@@ -38,23 +38,29 @@ function initials(name: string): string {
 }
 
 // Box art, or a hand-set placeholder when no cover is available.
+// Cover ratios vary per game, so no fixed frame: with h-auto the image keeps
+// its own intrinsic ratio — filled edge to edge, never cropped, never barred.
 function Cover({ url, name }: { url: string | null; name: string }) {
-  // Cover dimensions vary slightly per game — object-contain guarantees the
-  // full box art is always visible (letterboxed on the card's dark ground).
+  if (url) {
+    return (
+      <Image
+        src={url}
+        alt={`${name} cover`}
+        width={264}
+        height={374}
+        sizes="80px"
+        className="h-auto w-16 shrink-0 self-start rounded ring-1 ring-white/15 sm:w-20"
+      />
+    );
+  }
   return (
-    <div className="relative aspect-[3/4] w-16 shrink-0 overflow-hidden rounded bg-black/40 ring-1 ring-white/15 sm:w-20">
-      {url ? (
-        <Image src={url} alt={`${name} cover`} fill sizes="80px" className="object-contain" />
-      ) : (
-        <div
-          className="flex h-full w-full items-center justify-center"
-          style={{ backgroundColor: "rgba(224,167,46,0.08)" }}
-        >
-          <span className="font-poster text-xl" style={{ color: AMBER, opacity: 0.7 }}>
-            {initials(name)}
-          </span>
-        </div>
-      )}
+    <div
+      className="flex aspect-[3/4] w-16 shrink-0 items-center justify-center self-start rounded ring-1 ring-white/15 sm:w-20"
+      style={{ backgroundColor: "rgba(224,167,46,0.08)" }}
+    >
+      <span className="font-poster text-xl" style={{ color: AMBER, opacity: 0.7 }}>
+        {initials(name)}
+      </span>
     </div>
   );
 }
