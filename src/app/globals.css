@@ -266,6 +266,31 @@ body::after {
   animation: vhs-jitter 6s steps(1) infinite;
 }
 
+/* Respect Due — a candle flame breathing in a still room. */
+@keyframes flicker {
+  0%,
+  100% {
+    transform: scaleY(1) translateX(0);
+    opacity: 0.95;
+  }
+  20% {
+    transform: scaleY(1.08) translateX(0.6px);
+    opacity: 1;
+  }
+  45% {
+    transform: scaleY(0.94) translateX(-0.7px);
+    opacity: 0.85;
+  }
+  70% {
+    transform: scaleY(1.05) translateX(0.4px);
+    opacity: 0.95;
+  }
+}
+.flicker {
+  transform-origin: 50% 100%;
+  animation: flicker 2.8s ease-in-out infinite;
+}
+
 /* The Backlog — a save-screen blinking cursor. */
 @keyframes blink {
   0%,
@@ -294,7 +319,8 @@ body::after {
   .steam-2,
   .steam-3,
   .tracking-band,
-  .vhs-jitter {
+  .vhs-jitter,
+  .flicker {
     animation: none;
   }
   html {

@@ -1,8 +1,8 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { PostMeta } from "@/lib/posts";
 import { verdictLabel } from "@/components/Verdict";
-import { getGameCover } from "@/lib/igdb";
+import { getGameDetails } from "@/lib/igdb";
+import { SaveSlotGrid } from "@/components/SaveSlotGrid";
 
 // The Backlog is a save-select screen. Gaming home base, rendered in the site's
 // woodblock-and-letterpress type — never a pixel-font arcade cliché (§6).
@@ -27,44 +27,6 @@ const SAGAS = [
   { name: "Metal Gear Solid", query: "Metal Gear Solid Delta Snake Eater", since: 2024, status: "Saved", note: "Still on the codec, decades later.", pct: 82 },
 ];
 
-function initials(name: string): string {
-  return name
-    .split(/[\s:]+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0])
-    .join("")
-    .toUpperCase();
-}
-
-// Box art, or a hand-set placeholder when no cover is available.
-// Cover ratios vary per game, so no fixed frame: with h-auto the image keeps
-// its own intrinsic ratio — filled edge to edge, never cropped, never barred.
-function Cover({ url, name }: { url: string | null; name: string }) {
-  if (url) {
-    return (
-      <Image
-        src={url}
-        alt={`${name} cover`}
-        width={264}
-        height={374}
-        sizes="80px"
-        className="h-auto w-16 shrink-0 self-start rounded ring-1 ring-white/15 sm:w-20"
-      />
-    );
-  }
-  return (
-    <div
-      className="flex aspect-[3/4] w-16 shrink-0 items-center justify-center self-start rounded ring-1 ring-white/15 sm:w-20"
-      style={{ backgroundColor: "rgba(224,167,46,0.08)" }}
-    >
-      <span className="font-poster text-xl" style={{ color: AMBER, opacity: 0.7 }}>
-        {initials(name)}
-      </span>
-    </div>
-  );
-}
-
 function formatDate(date: string): string {
   if (!date) return "";
   const d = new Date(date);
@@ -77,62 +39,20 @@ function formatDate(date: string): string {
   });
 }
 
-function SaveSlot({
-  file,
-  name,
-  status,
-  note,
-  pct,
-  cover,
-}: {
-  file: string;
-  name: string;
-  status: string;
-  note: string;
-  pct: number;
-  cover: string | null;
-}) {
-  return (
-    <div className="group flex gap-4 rounded-lg border border-white/10 bg-white/[0.03] p-4 transition-all duration-200 hover:border-[#e0a72e]/50 hover:bg-white/[0.05] hover:shadow-[0_0_30px_-12px_rgba(224,167,46,0.45)]">
-      <Cover url={cover} name={name} />
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center justify-between gap-2">
-          <span className="font-mono text-[10px] uppercase tracking-[0.25em]" style={{ color: AMBER }}>
-            {file}
-          </span>
-          {/* On hover, the save status flips to the console prompt. */}
-          <span className="relative shrink-0 font-mono text-[10px] uppercase tracking-[0.2em]">
-            <span className="transition-opacity group-hover:opacity-0" style={{ color: SOFT }}>
-              {status}
-            </span>
-            <span
-              className="absolute right-0 top-0 opacity-0 transition-opacity group-hover:opacity-100"
-              style={{ color: AMBER }}
-              aria-hidden="true"
-            >
-              ▸ Load?<span className="blink">▌</span>
-            </span>
-          </span>
-        </div>
-        <h3 className="mt-2 font-body text-xl font-semibold leading-tight" style={{ color: TEXT }}>
-          {name}
-        </h3>
-        <p className="mt-1 font-body text-sm leading-snug" style={{ color: SOFT }}>
-          {note}
-        </p>
-        {/* Decorative save-progress bar. */}
-        <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.08)" }}>
-          <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: AMBER, opacity: 0.85 }} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export async function BacklogColumn({ posts }: { posts: PostMeta[] }) {
-  const covers = await Promise.all(
-    SAGAS.map((s) => getGameCover(s.query, s.since)),
+  // Full game details fetched at build time — the click-to-load interaction
+  // is instant and needs no runtime API.
+  const details = await Promise.all(
+    SAGAS.map((s) => getGameDetails(s.query, s.since)),
   );
+  const slots = SAGAS.map((s, i) => ({
+    file: `FILE ${String(i + 1).padStart(2, "0")}`,
+    name: s.name,
+    status: s.status,
+    note: s.note,
+    pct: s.pct,
+    details: details[i],
+  }));
 
   return (
     <div className="relative w-full overflow-hidden" style={{ background: CRT_BG, color: TEXT }}>
@@ -180,19 +100,10 @@ export async function BacklogColumn({ posts }: { posts: PostMeta[] }) {
             Conversations still open
           </span>
         </h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {SAGAS.map((s, i) => (
-            <SaveSlot
-              key={s.name}
-              file={`FILE ${String(i + 1).padStart(2, "0")}`}
-              name={s.name}
-              status={s.status}
-              note={s.note}
-              pct={s.pct}
-              cover={covers[i]}
-            />
-          ))}
-        </div>
+        <SaveSlotGrid slots={slots} />
+        <p className="mt-3 text-right font-mono text-[9px] uppercase tracking-[0.2em]" style={{ color: SOFT, opacity: 0.6 }}>
+          Press a file to load it · game data via IGDB
+        </p>
       </section>
 
       {/* ---- The pile (posts) ---- */}

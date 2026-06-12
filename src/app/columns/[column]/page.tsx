@@ -7,6 +7,7 @@ import { NightcapColumn } from "@/components/NightcapColumn";
 import { ComfortModeColumn } from "@/components/ComfortModeColumn";
 import { BacklogColumn } from "@/components/BacklogColumn";
 import { RewindColumn } from "@/components/RewindColumn";
+import { RespectDueColumn } from "@/components/RespectDueColumn";
 import { ColumnLayout } from "@/components/ColumnLayout";
 
 export const dynamicParams = false;
@@ -55,6 +56,11 @@ export default async function ColumnPage({
   // Rewind is the neighborhood video store.
   if (col.id === "rewind") {
     return <RewindColumn posts={posts} />;
+  }
+
+  // Respect Due is a candlelit hall of honor.
+  if (col.id === "respect-due") {
+    return <RespectDueColumn posts={posts} />;
   }
 
   // Every other column renders through the themed layout (per-column identity).

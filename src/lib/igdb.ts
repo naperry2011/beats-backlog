@@ -89,3 +89,95 @@ export async function getGameCovers(
   );
   return Object.fromEntries(entries);
 }
+
+// Fuller record for the "load this save file" detail view. Same fail-soft
+// rules: any miss → null, the build never breaks. No numeric ratings — the
+// site doesn't do scores, ours or anyone else's.
+export interface GameDetails {
+  name: string;
+  summary: string | null;
+  year: number | null;
+  genres: string[];
+  developer: string | null;
+  coverUrl: string | null;
+}
+
+const detailsCache = new Map<string, GameDetails | null>();
+
+export async function getGameDetails(
+  query: string,
+  since?: number,
+): Promise<GameDetails | null> {
+  const cacheKey = since ? `${query}@${since}#d` : `${query}#d`;
+  if (detailsCache.has(cacheKey)) return detailsCache.get(cacheKey)!;
+
+  const id = process.env.TWITCH_CLIENT_ID;
+  const token = await getToken();
+  if (!id || !token) {
+    detailsCache.set(cacheKey, null);
+    return null;
+  }
+
+  const where = since
+    ? ` where first_release_date >= ${Math.floor(Date.UTC(since, 0, 1) / 1000)} & cover != null;`
+    : "";
+
+  try {
+    const res = await fetch(GAMES_URL, {
+      method: "POST",
+      headers: {
+        "Client-ID": id,
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+      body:
+        `search "${query.replace(/"/g, "")}"; ` +
+        `fields name,summary,first_release_date,genres.name,` +
+        `involved_companies.company.name,involved_companies.developer,` +
+        `cover.image_id;${where} limit 5;`,
+    });
+    if (!res.ok) {
+      detailsCache.set(cacheKey, null);
+      return null;
+    }
+    const data: Array<{
+      name?: string;
+      summary?: string;
+      first_release_date?: number;
+      genres?: Array<{ name?: string }>;
+      involved_companies?: Array<{
+        developer?: boolean;
+        company?: { name?: string };
+      }>;
+      cover?: { image_id?: string };
+    }> = await res.json();
+
+    const g = data.find((x) => x.cover?.image_id) ?? data[0];
+    if (!g?.name) {
+      detailsCache.set(cacheKey, null);
+      return null;
+    }
+
+    const details: GameDetails = {
+      name: g.name,
+      summary: g.summary ?? null,
+      year: g.first_release_date
+        ? new Date(g.first_release_date * 1000).getUTCFullYear()
+        : null,
+      genres: (g.genres ?? [])
+        .map((x) => x.name)
+        .filter((x): x is string => Boolean(x))
+        .slice(0, 4),
+      developer:
+        g.involved_companies?.find((c) => c.developer)?.company?.name ?? null,
+      coverUrl: g.cover?.image_id
+        ? `https://images.igdb.com/igdb/image/upload/t_cover_big/${g.cover.image_id}.jpg`
+        : null,
+    };
+    detailsCache.set(cacheKey, details);
+    return details;
+  } catch {
+    detailsCache.set(cacheKey, null);
+    return null;
+  }
+}
