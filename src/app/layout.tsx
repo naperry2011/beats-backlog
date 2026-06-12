@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Anton, Newsreader, Space_Mono } from "next/font/google";
+import { Anton, Newsreader, Noto_Serif_JP, Space_Mono } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
@@ -29,6 +29,15 @@ const mono = Space_Mono({
   display: "swap",
 });
 
+// Hanko seals — a self-hosted Mincho so the kanji (遊/観/聴) render as
+// woodblock serifs on every device, never a system sans fallback.
+const seal = Noto_Serif_JP({
+  weight: "600",
+  variable: "--ff-seal",
+  display: "swap",
+  preload: false,
+});
+
 export const metadata: Metadata = {
   title: "Beats and Backlog",
   description:
@@ -43,7 +52,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${poster.variable} ${body.variable} ${mono.variable} h-full antialiased`}
+      className={`${poster.variable} ${body.variable} ${mono.variable} ${seal.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <Nav />

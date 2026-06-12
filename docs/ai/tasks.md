@@ -11,12 +11,20 @@ Active work. Update as items are completed and new work is identified.
 
 - [ ] (none actively mid-edit)
 
-## Up Next
+## Columns Campaign (agreed 2026-06-11: premium pass first, then 5 new worlds, On Tap full watchlist)
+
+- [ ] Phase 1 — premium pass: Nightcap (past-round art, staggered reveals, self-hosted CJK for hanko), Comfort Mode (steam, menu hovers, today's special), Backlog (LOAD? hover, shimmer), shared mobile/reduced-motion audit — M
+- [ ] Phase 2 — Rewind (video-rental shelf / VHS) — M
+- [ ] Phase 2 — Respect Due (candlelit hall of honor) — M
+- [ ] Phase 2 — Worth Your Hours? (time-clock bureau) — M
+- [ ] Phase 2 — Next Round (open-mic marquee) — M
+- [ ] Phase 2 — On Tap (taproom + live IGDB watchlist, ISR daily) — L
+- [ ] Phase 3 — `/columns` index (record-crate contact sheet) — S
+
+## Up Next (after campaign)
 
 - [ ] Article/reading page polish — drop caps, pull quotes, margin notes, record-sleeve header — M
 - [ ] About manifesto page — rewrite from plain text into the real "why" — S
-- [ ] `/columns` index page (contact-sheet of all 8) — S
-- [ ] On Tap column built on `igdb.ts` (upcoming releases + dates, ISR daily) — L
 
 ## Blocked
 

@@ -93,15 +93,25 @@ function SaveSlot({
   cover: string | null;
 }) {
   return (
-    <div className="flex gap-4 rounded-lg border border-white/10 bg-white/[0.03] p-4 transition-colors hover:border-[#e0a72e]/40">
+    <div className="group flex gap-4 rounded-lg border border-white/10 bg-white/[0.03] p-4 transition-all duration-200 hover:border-[#e0a72e]/50 hover:bg-white/[0.05] hover:shadow-[0_0_30px_-12px_rgba(224,167,46,0.45)]">
       <Cover url={cover} name={name} />
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-2">
           <span className="font-mono text-[10px] uppercase tracking-[0.25em]" style={{ color: AMBER }}>
             {file}
           </span>
-          <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.2em]" style={{ color: SOFT }}>
-            {status}
+          {/* On hover, the save status flips to the console prompt. */}
+          <span className="relative shrink-0 font-mono text-[10px] uppercase tracking-[0.2em]">
+            <span className="transition-opacity group-hover:opacity-0" style={{ color: SOFT }}>
+              {status}
+            </span>
+            <span
+              className="absolute right-0 top-0 opacity-0 transition-opacity group-hover:opacity-100"
+              style={{ color: AMBER }}
+              aria-hidden="true"
+            >
+              ▸ Load?<span className="blink">▌</span>
+            </span>
           </span>
         </div>
         <h3 className="mt-2 font-body text-xl font-semibold leading-tight" style={{ color: TEXT }}>

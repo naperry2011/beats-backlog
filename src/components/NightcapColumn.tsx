@@ -60,9 +60,10 @@ function Glass({ className }: { className?: string }) {
 }
 
 // A red artist's seal (落款 / hanko) — the mark in the corner of every ukiyo-e
-// print. CJK serif (Mincho) fallbacks keep it woodblock, not system-sans.
+// print. Self-hosted Noto Serif JP first (--ff-seal, loaded in layout.tsx),
+// then system Mincho fallbacks — never a sans.
 const SEAL_FONT =
-  '"Yu Mincho","Hiragino Mincho ProN","Noto Serif JP","MS Mincho",serif';
+  'var(--ff-seal),"Yu Mincho","Hiragino Mincho ProN","Noto Serif JP","MS Mincho",serif';
 
 function Hanko({
   char,
@@ -99,14 +100,19 @@ function PourRow({
   kind,
   value,
   cover,
+  delay,
 }: {
   kanji: string;
   kind: string;
   value?: string;
   cover?: string | null;
+  delay?: string;
 }) {
   return (
-    <div className="flex items-center gap-4 border-t border-[#d9a441]/20 py-4 first:border-t-0">
+    <div
+      className="reveal flex items-center gap-4 border-t border-[#d9a441]/20 py-4 first:border-t-0"
+      style={delay ? { animationDelay: delay } : undefined}
+    >
       <Hanko char={kanji} size="sm" />
       {cover && (
         // No fixed frame — h-auto keeps each art's intrinsic ratio (game box,
@@ -135,10 +141,14 @@ function PourRow({
 export async function NightcapColumn({ posts }: { posts: PostMeta[] }) {
   const featured = posts[0];
   const past = posts.slice(1);
-  const [gameCover, animeCover, trackArt] = await Promise.all([
+  const [gameCover, animeCover, trackArt, ...pastCovers] = await Promise.all([
     featured?.nightcap?.game ? getGameCover(featured.nightcap.game) : null,
     featured?.nightcap?.anime ? getAnimeCover(featured.nightcap.anime) : null,
     featured?.nightcap?.track ? getAlbumArt(featured.nightcap.track) : null,
+    // One thumbnail per past round — the game pick fronts the row.
+    ...past.map((p) =>
+      p.nightcap?.game ? getGameCover(p.nightcap.game) : Promise.resolve(null),
+    ),
   ]);
 
   return (
@@ -171,10 +181,11 @@ export async function NightcapColumn({ posts }: { posts: PostMeta[] }) {
       {/* ---- The ritual: three pillars ---- */}
       <section className="mx-auto max-w-3xl px-5 py-8">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-          {PILLARS.map(({ kanji, label, note }) => (
+          {PILLARS.map(({ kanji, label, note }, i) => (
             <div
               key={label}
-              className="flex flex-col items-center rounded-xl border border-white/10 bg-white/[0.03] px-4 py-7 text-center"
+              className="reveal flex flex-col items-center rounded-xl border border-white/10 bg-white/[0.03] px-4 py-7 text-center transition-colors hover:border-[#d9a441]/40 hover:bg-white/[0.05]"
+              style={{ animationDelay: `${0.08 + i * 0.1}s` }}
             >
               <Hanko char={kanji} />
               <p className="mt-4 font-body text-lg font-semibold text-[#f4ecd8]">
@@ -218,9 +229,9 @@ export async function NightcapColumn({ posts }: { posts: PostMeta[] }) {
               </h3>
 
               <div className="mt-5">
-                <PourRow kanji="遊" kind="Game" value={featured.nightcap?.game} cover={gameCover} />
-                <PourRow kanji="観" kind="Anime" value={featured.nightcap?.anime} cover={animeCover} />
-                <PourRow kanji="聴" kind="Track" value={featured.nightcap?.track} cover={trackArt} />
+                <PourRow kanji="遊" kind="Game" value={featured.nightcap?.game} cover={gameCover} delay="0.1s" />
+                <PourRow kanji="観" kind="Anime" value={featured.nightcap?.anime} cover={animeCover} delay="0.22s" />
+                <PourRow kanji="聴" kind="Track" value={featured.nightcap?.track} cover={trackArt} delay="0.34s" />
               </div>
 
               <Link
@@ -251,14 +262,35 @@ export async function NightcapColumn({ posts }: { posts: PostMeta[] }) {
             Last call — past rounds
           </h2>
           <ul>
-            {past.map((p) => (
+            {past.map((p, i) => (
               <li key={p.slug} className="border-b border-white/10">
                 <Link
                   href={`/posts/${p.slug}`}
-                  className="group flex items-baseline justify-between gap-4 py-4"
+                  className="group flex items-center gap-4 py-4 transition-colors hover:bg-white/[0.03]"
                 >
-                  <span className="font-body text-lg text-[#efe6d2] transition-colors group-hover:text-[#d9a441]">
-                    {p.title}
+                  {pastCovers[i] ? (
+                    <Image
+                      src={pastCovers[i]!}
+                      alt=""
+                      width={264}
+                      height={374}
+                      sizes="40px"
+                      className="h-auto w-10 shrink-0 rounded ring-1 ring-white/15"
+                    />
+                  ) : (
+                    <Glass className="w-7 shrink-0 text-[#d9a441]/50" />
+                  )}
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate font-body text-lg text-[#efe6d2] transition-colors group-hover:text-[#d9a441]">
+                      {p.title}
+                    </span>
+                    {p.nightcap && (
+                      <span className="block truncate font-mono text-[10px] uppercase tracking-wide text-[#9d83c4]">
+                        {[p.nightcap.game, p.nightcap.anime, p.nightcap.track]
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </span>
+                    )}
                   </span>
                   <span className="shrink-0 font-mono text-[10px] uppercase tracking-wide text-[#b7a6d4]">
                     {p.readingTime}

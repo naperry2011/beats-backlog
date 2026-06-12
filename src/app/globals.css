@@ -200,6 +200,30 @@ body::after {
   animation: aurora 10s ease-in-out infinite;
 }
 
+/* Comfort Mode — steam drifting up off the cup. */
+@keyframes steam {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scaleX(1);
+  }
+  30% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-14px) scaleX(1.35);
+  }
+}
+.steam {
+  animation: steam 3.2s ease-out infinite;
+}
+.steam-2 {
+  animation: steam 3.2s ease-out 1.1s infinite;
+}
+.steam-3 {
+  animation: steam 3.2s ease-out 2.2s infinite;
+}
+
 /* The Backlog — a save-screen blinking cursor. */
 @keyframes blink {
   0%,
@@ -223,7 +247,10 @@ body::after {
   .marquee-track,
   .animate-spin-slow,
   .tribute-glow,
-  .blink {
+  .blink,
+  .steam,
+  .steam-2,
+  .steam-3 {
     animation: none;
   }
   html {

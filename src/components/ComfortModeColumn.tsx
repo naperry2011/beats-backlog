@@ -111,7 +111,15 @@ export function ComfortModeColumn({ posts }: { posts: PostMeta[] }) {
 
       {/* ---- Storefront ---- */}
       <section className="relative mx-auto max-w-2xl px-5 pb-10 pt-16 text-center">
-        <CafeBadge className="mx-auto w-36 sm:w-40" />
+        <div className="relative mx-auto w-36 sm:w-40">
+          {/* Steam drifting up off the roaster's cup. */}
+          <div aria-hidden="true" className="absolute -top-5 left-1/2 flex -translate-x-1/2 gap-2">
+            <span className="steam h-5 w-[3px] rounded-full" style={{ backgroundColor: ESPRESSO, opacity: 0 }} />
+            <span className="steam-2 h-6 w-[3px] rounded-full" style={{ backgroundColor: ESPRESSO, opacity: 0 }} />
+            <span className="steam-3 h-5 w-[3px] rounded-full" style={{ backgroundColor: ESPRESSO, opacity: 0 }} />
+          </div>
+          <CafeBadge className="w-full" />
+        </div>
 
         <div
           className="mt-8 border-2 bg-[#f5edd7]/55 px-6 py-8 sm:px-10"
@@ -140,7 +148,10 @@ export function ComfortModeColumn({ posts }: { posts: PostMeta[] }) {
         </h2>
         <ul className="mx-auto max-w-lg">
           {MENU.map((m) => (
-            <li key={m.name} className="flex items-baseline py-3 font-body text-lg">
+            <li
+              key={m.name}
+              className="flex items-baseline rounded px-2 py-3 font-body text-lg transition-colors hover:bg-[#3a2a1c]/[0.06]"
+            >
               <span className="font-semibold">{m.name}</span>
               <Leader />
               <span className="italic" style={{ color: "#6f5a40" }}>
@@ -167,9 +178,17 @@ export function ComfortModeColumn({ posts }: { posts: PostMeta[] }) {
 
         {posts.length > 0 ? (
           <ul>
-            {posts.map((post) => (
+            {posts.map((post, i) => (
               <li key={post.slug} className="border-b" style={{ borderColor: "rgba(58,42,28,0.18)" }}>
-                <Link href={`/posts/${post.slug}`} className="group block py-6">
+                <Link
+                  href={`/posts/${post.slug}`}
+                  className="group block px-2 py-6 transition-colors hover:bg-[#3a2a1c]/[0.05]"
+                >
+                  {i === 0 && (
+                    <span className="tape mb-2 inline-block px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.25em]">
+                      Today&apos;s special
+                    </span>
+                  )}
                   <div className="flex items-baseline">
                     <h3 className="font-body text-2xl font-semibold leading-tight transition-colors group-hover:text-[#a9712f]">
                       {post.title}
