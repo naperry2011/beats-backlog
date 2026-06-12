@@ -13,13 +13,17 @@ Active work. Update as items are completed and new work is identified.
 
 ## Columns Campaign (agreed 2026-06-11: premium pass first, then 5 new worlds, On Tap full watchlist)
 
-- [ ] Phase 1 — premium pass: Nightcap (past-round art, staggered reveals, self-hosted CJK for hanko), Comfort Mode (steam, menu hovers, today's special), Backlog (LOAD? hover, shimmer), shared mobile/reduced-motion audit — M
-- [ ] Phase 2 — Rewind (video-rental shelf / VHS) — M
-- [ ] Phase 2 — Respect Due (candlelit hall of honor) — M
-- [ ] Phase 2 — Worth Your Hours? (time-clock bureau) — M
+- [x] Phase 1 — premium pass: Nightcap (CJK hanko font, staggered reveals, past-round art), Comfort Mode (steam, hovers, today's special), Backlog (Load? hover) — 2026-06-11
+- [x] Phase 2 — Rewind (video-rental shelf / VHS) — 2026-06-11
+- [x] Phase 2 — Respect Due (candlelit hall of honor) — 2026-06-11
+- [x] Bonus — Backlog engagement: click a save slot → game detail panel (getGameDetails in igdb.ts + client SaveSlotGrid; build-time data, instant UI) — 2026-06-11
+- [ ] Phase 2 — Worth Your Hours? (time-clock bureau) — M ← NEXT
 - [ ] Phase 2 — Next Round (open-mic marquee) — M
 - [ ] Phase 2 — On Tap (taproom + live IGDB watchlist, ISR daily) — L
 - [ ] Phase 3 — `/columns` index (record-crate contact sheet) — S
+
+> Note: 4 commits sitting on local `main` ahead of origin (premium pass,
+> Rewind, Respect Due + Backlog details, docs) — user pushes/deploys himself.
 
 ## Up Next (after campaign)
 
