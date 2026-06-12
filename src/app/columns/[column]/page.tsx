@@ -6,6 +6,7 @@ import { getColumnTheme } from "@/lib/columnThemes";
 import { NightcapColumn } from "@/components/NightcapColumn";
 import { ComfortModeColumn } from "@/components/ComfortModeColumn";
 import { BacklogColumn } from "@/components/BacklogColumn";
+import { RewindColumn } from "@/components/RewindColumn";
 import { ColumnLayout } from "@/components/ColumnLayout";
 
 export const dynamicParams = false;
@@ -49,6 +50,11 @@ export default async function ColumnPage({
   // The Backlog is a save-select screen.
   if (col.id === "the-backlog") {
     return <BacklogColumn posts={posts} />;
+  }
+
+  // Rewind is the neighborhood video store.
+  if (col.id === "rewind") {
+    return <RewindColumn posts={posts} />;
   }
 
   // Every other column renders through the themed layout (per-column identity).
