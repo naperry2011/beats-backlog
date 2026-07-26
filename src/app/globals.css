@@ -151,6 +151,46 @@ body::after {
   background-size: 100% 2px;
 }
 
+/* ---- The read --------------------------------------------------------- */
+/* The article body is the whole point of the site, so it gets real print
+   furniture: a struck initial to open, and blockquotes that read as pull
+   quotes instead of nested indents. */
+
+/* flow-root makes the opening paragraph contain its own floated initial, so a
+   short first line can't leave the cap bleeding into the paragraph below. */
+.article-body > p:first-of-type {
+  display: flow-root;
+}
+
+.article-body > p:first-of-type::first-letter {
+  float: left;
+  margin: 0.06em 0.09em 0 0;
+  font-family: var(--font-poster);
+  font-size: 4.1em;
+  font-weight: 400;
+  line-height: 0.76;
+  color: var(--color-vermillion);
+}
+
+.article-body blockquote {
+  margin: 2.5rem 0;
+  border: 0;
+  border-top: 2px solid var(--color-ochre);
+  border-bottom: 1px solid rgba(24, 20, 16, 0.15);
+  padding: 1.5rem 0 1.75rem;
+  font-family: var(--font-body);
+  font-size: 1.5rem;
+  font-style: italic;
+  line-height: 1.35;
+  color: var(--color-ink);
+  quotes: none;
+}
+
+.article-body blockquote p:first-of-type::before,
+.article-body blockquote p:last-of-type::after {
+  content: none;
+}
+
 /* ---- Motion ----------------------------------------------------------- */
 
 @keyframes reveal-up {
@@ -167,21 +207,6 @@ body::after {
 .reveal {
   opacity: 0;
   animation: reveal-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
-}
-
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-.marquee-track {
-  display: inline-flex;
-  white-space: nowrap;
-  animation: marquee 24s linear infinite;
 }
 
 /* Tribute page — slow Purple Rain aurora behind the portrait. */
@@ -311,7 +336,6 @@ body::after {
     opacity: 1;
     animation: none;
   }
-  .marquee-track,
   .animate-spin-slow,
   .tribute-glow,
   .blink,

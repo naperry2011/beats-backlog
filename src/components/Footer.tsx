@@ -26,8 +26,8 @@ export function Footer() {
           <Link href="/columns/the-backlog" className="brush-link hover:text-paper">
             The Backlog
           </Link>
-          <span className="text-paper/40">Discord — soon</span>
-          <span className="text-paper/40">Newsletter — soon</span>
+          <span className="text-paper/40">Discord, soon</span>
+          <span className="text-paper/40">Newsletter, soon</span>
           <Link
             href="/tribute"
             className="text-[#b18cd6] transition-colors hover:text-[#cbb0e8]"
@@ -36,9 +36,12 @@ export function Footer() {
           </Link>
         </div>
 
-        <p className="mt-10 border-t border-paper/15 pt-5 font-mono text-[10px] uppercase tracking-[0.25em] text-paper/45">
-          BNB · Est. 2026 · Video games, anime &amp; music · Made after bedtime
-        </p>
+        <div className="mt-10 flex flex-wrap gap-x-8 gap-y-2 border-t border-paper/15 pt-5 font-mono text-[10px] uppercase tracking-[0.25em] text-paper/45">
+          <span>Beats &amp; Backlog</span>
+          <span>Est. 2026</span>
+          <span>Video games, anime &amp; music</span>
+          <span>Made after bedtime</span>
+        </div>
       </div>
     </footer>
   );

@@ -2,7 +2,9 @@ import Link from "next/link";
 import type { PostMeta } from "@/lib/posts";
 import type { Column } from "@/lib/columns";
 import type { ColumnTheme } from "@/lib/columnThemes";
+import { getPostArtMap } from "@/lib/art";
 import { ColumnSeal } from "@/components/ColumnSeal";
+import { PostArtwork } from "@/components/PostArtwork";
 import { verdictLabel } from "@/components/Verdict";
 
 function formatDate(date: string): string {
@@ -35,7 +37,7 @@ const TOKENS = {
   },
 } as const;
 
-export function ColumnLayout({
+export async function ColumnLayout({
   column,
   posts,
   theme,
@@ -45,6 +47,7 @@ export function ColumnLayout({
   theme: ColumnTheme;
 }) {
   const t = TOKENS[theme.mood];
+  const art = await getPostArtMap(posts);
 
   const background =
     theme.mood === "night"
@@ -82,10 +85,12 @@ export function ColumnLayout({
           >
             {theme.kicker}
           </p>
-          <h1 className="mt-3 font-poster text-6xl uppercase tracking-tight ink-press sm:text-7xl">
+          <h1 className="ink-press mt-3 font-poster text-6xl uppercase tracking-tight sm:text-7xl">
             {column.name}
           </h1>
-          <p className={`mx-auto mt-6 max-w-2xl font-body text-lg leading-relaxed ${t.soft}`}>
+          <p
+            className={`mx-auto mt-6 max-w-2xl font-body text-lg leading-relaxed ${t.soft}`}
+          >
             {theme.manifesto}
           </p>
         </div>
@@ -94,67 +99,78 @@ export function ColumnLayout({
       {/* ---- The posts ---- */}
       <section className="mx-auto max-w-3xl px-5 pb-20">
         <h2
-          className={`mb-2 flex items-baseline justify-between border-b-2 pb-3 ${t.rule}`}
+          className="mb-8 border-b-2 pb-3 font-poster text-3xl uppercase tracking-tight"
           style={{ borderColor: theme.accent }}
         >
-          <span
-            className="font-mono text-xs uppercase tracking-[0.3em]"
-            style={{ color: theme.accent }}
-          >
-            {theme.listLabel}
-          </span>
-          <span className={`font-mono text-[10px] uppercase tracking-[0.2em] ${t.soft}`}>
-            {posts.length} {posts.length === 1 ? "entry" : "entries"}
-          </span>
+          {theme.listLabel}
         </h2>
 
         {posts.length > 0 ? (
-          <ul>
+          <ul className={`divide-y ${t.rule}`}>
             {posts.map((post) => (
-              <li key={post.slug} className={`border-b ${t.rule}`}>
+              <li key={post.slug}>
                 <Link
                   href={`/posts/${post.slug}`}
-                  className={`group block px-2 py-6 transition-colors ${t.hover}`}
+                  className={`group grid grid-cols-[72px_1fr] items-start gap-5 px-2 py-6 transition-colors sm:grid-cols-[96px_1fr] sm:gap-6 ${t.hover}`}
                 >
-                  <h3 className={`font-body text-2xl font-semibold leading-tight transition-colors ${t.cardTitleHover}`}>
-                    {post.title}
-                  </h3>
-                  {post.excerpt && (
-                    <p className={`mt-2 max-w-2xl font-body ${t.soft}`}>
-                      {post.excerpt}
-                    </p>
-                  )}
-                  <p className={`mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] uppercase tracking-wide ${t.soft}`}>
-                    {post.date && <span>{formatDate(post.date)}</span>}
-                    {post.readingTime && (
-                      <>
-                        <span aria-hidden="true">·</span>
-                        <span>{post.readingTime}</span>
-                      </>
+                  <PostArtwork
+                    art={art[post.slug] ?? null}
+                    column={post.column}
+                    title={post.title}
+                    tone={theme.mood}
+                    sizes="96px"
+                    className="transition-transform duration-300 group-hover:-translate-y-1"
+                  />
+                  <div>
+                    <h3
+                      className={`font-body text-2xl font-semibold leading-tight transition-colors ${t.cardTitleHover}`}
+                    >
+                      {post.title}
+                    </h3>
+                    {post.excerpt && (
+                      <p className={`mt-2 font-body leading-relaxed ${t.soft}`}>
+                        {post.excerpt}
+                      </p>
                     )}
-                    {post.verdict && (
-                      <>
-                        <span aria-hidden="true">·</span>
+                    <p
+                      className={`mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[11px] uppercase tracking-wide ${t.soft}`}
+                    >
+                      {post.date && <span>{formatDate(post.date)}</span>}
+                      {post.readingTime && <span>{post.readingTime}</span>}
+                      {post.verdict && (
                         <span style={{ color: theme.accent }}>
                           {verdictLabel(post.verdict)}
                         </span>
-                      </>
-                    )}
-                  </p>
+                      )}
+                    </p>
+                  </div>
                 </Link>
               </li>
             ))}
           </ul>
         ) : (
-          <div className="flex flex-col items-center px-2 py-16 text-center">
-            <div
-              className="h-12 w-12 rounded-full border border-dashed"
-              style={{ borderColor: theme.accent, opacity: 0.5 }}
-              aria-hidden="true"
+          /* Nothing filed yet, so the column shows its own blank sleeve
+             rather than an apology in a dashed circle. */
+          <div className="grid items-center gap-7 py-6 sm:grid-cols-[minmax(0,150px)_1fr] sm:gap-9">
+            <PostArtwork
+              art={null}
+              column={column.id}
+              title={`${column.name}, no entries yet`}
+              tone={theme.mood}
+              sizes="150px"
             />
-            <p className={`mt-5 font-body text-xl italic ${t.soft}`}>
-              {theme.emptyLine}
-            </p>
+            <div>
+              <p className={`font-body text-2xl italic leading-snug ${t.soft}`}>
+                {theme.emptyLine}
+              </p>
+              <Link
+                href="/columns/the-nightcap"
+                className="brush-link mt-5 inline-block font-mono text-[11px] uppercase tracking-[0.2em]"
+                style={{ color: theme.accent }}
+              >
+                Start with the Nightcap →
+              </Link>
+            </div>
           </div>
         )}
       </section>

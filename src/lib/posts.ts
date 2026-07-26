@@ -26,6 +26,15 @@ export interface Nightcap {
   track?: string;
 }
 
+// What this post's sleeve art should be pulled from. Optional: when it's
+// absent, a Nightcap's picks stand in, and failing that the post falls back
+// to a struck monogram sleeve. Set at most one field.
+export interface Art {
+  game?: string;
+  anime?: string;
+  album?: string;
+}
+
 export interface PostMeta {
   slug: string;
   title: string;
@@ -35,6 +44,7 @@ export interface PostMeta {
   verdict?: VerdictId;
   pour?: Pour;
   nightcap?: Nightcap;
+  art?: Art;
   readingTime: string;
 }
 
@@ -54,6 +64,7 @@ function readPost(fileName: string): PostMeta {
     verdict: data.verdict as VerdictId | undefined,
     pour: data.pour as Pour | undefined,
     nightcap: data.nightcap as Nightcap | undefined,
+    art: data.art as Art | undefined,
     readingTime: readingTime(content).text,
   };
 }

@@ -15,8 +15,8 @@ Beats and Backlog is a writing-first publication about video games, anime, and m
 
 ## Now
 
-- Article/reading page polish (drop caps, pull quotes, margin liner-notes, record-sleeve header) — planned
 - About manifesto page (Dilla/Nujabes/Champloo lineage, the voice) — planned
+- Remaining bespoke column worlds: Worth Your Hours?, Next Round, On Tap — planned
 
 ## Next
 
@@ -33,6 +33,7 @@ Beats and Backlog is a writing-first publication about video games, anime, and m
 
 ## Recently Completed
 
+- Visual uplift: hero recomposition, sleeve art on posts, reading-page furniture — 2026-07-26
 - IGDB cover integration + remake pinning — 2026-06-08
 - Bespoke Nightcap / Comfort Mode / Backlog + seal system — 2026-06-08
 - Tribute page with real content — 2026-06-08

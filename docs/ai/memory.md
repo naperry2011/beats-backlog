@@ -21,11 +21,31 @@ Running history of what's been built and current state. Update after major chang
 - Twitch credentials were shared in chat and live in `.env.local` — **rotate before launch**, add to Vercel env on deploy.
 - `globals.css` class/token names are an untyped contract — renames can silently break className usages.
 - IGDB cover matching can pick wrong editions for shared titles (mitigated with a per-saga `since` year filter).
+- No decorative/ambient motion chrome on this project: the user rejects marquees and tickers as "AI slop." The planned Next Round "open-mic marquee" needs a different device.
 
 ### In Progress
 - Nothing actively mid-edit. Candidate next work below.
 
 ## Implementation History
+
+### 2026-07-26 — Visual uplift (shared surfaces + reading page)
+**What was built:** Hero recomposed as an asymmetric split so the sun-record
+scene sits on the first screen. New `lib/art.ts` + `PostArtwork` put real cover
+art (IGDB/AniList/iTunes) on the home page, post cards, reading page, and the
+themed `ColumnLayout`, with a white-label monogram sleeve as the fallback. Home
+page regrouped into four distinct layout families. Reading page got a
+record-sleeve header, a struck drop cap, and pull quotes. The scrolling ticker
+above the masthead was deleted at the user's request ("AI slop"); header is now
+56px.
+**Why:** The surface was strongly art-directed but the structure underneath was
+conventional, and the cover-art pipeline built in June was unused on every
+high-traffic surface.
+**Bugs fixed:** AniList's `large` field serves the /medium/ file (107px wide) —
+switched to `extraLarge` (460px), which also fixes the bespoke Nightcap column.
+Italic hero headline was clipping the "g" descender.
+**Files affected:** src/lib/art.ts (new), src/components/PostArtwork.tsx (new),
+Hero, Nav, Footer, PostCard, ColumnLayout, page.tsx, posts/[slug]/page.tsx,
+globals.css, lib/anilist.ts, lib/posts.ts
 
 ### 2026-06-08 — Scaffold + look
 **What was built:** Next.js/MDX/Tailwind skeleton (steps 1–3); palette, fonts, Champloo shell, columns, Verdict/Pour.

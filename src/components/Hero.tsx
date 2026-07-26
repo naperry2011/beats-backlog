@@ -1,6 +1,10 @@
 // The masthead showpiece: an ukiyo-e scene — a vinyl record as the rising sun
 // over a seigaiha sea, with ink clouds and birds. The literal crossroads of
 // games, anime, and music (the lofi/woodblock lineage, §2/§6).
+//
+// Composed as a split so the record shares the first screen with the copy
+// instead of sitting a scroll below it. The sea runs full-bleed under both and
+// crosses in front of the record's base, the way the horizon should.
 
 function SunRecord() {
   return (
@@ -47,6 +51,19 @@ function SunRecord() {
           stroke="var(--color-vermillion)"
           strokeWidth="2"
         />
+        {/* The speed, printed on the label the way a real 12-inch carries it. */}
+        <text
+          x="100"
+          y="114"
+          textAnchor="middle"
+          fill="var(--color-ink)"
+          fontSize="7"
+          letterSpacing="0.5"
+          opacity="0.75"
+          style={{ fontFamily: "var(--font-mono)" }}
+        >
+          33⅓
+        </text>
         <circle cx="100" cy="100" r="2.4" fill="var(--color-paper)" />
       </svg>
     </div>
@@ -87,85 +104,85 @@ export function Hero() {
       }}
     >
       {/* Drifting ink clouds. */}
-      <div className="halftone pointer-events-none absolute -right-8 top-10 h-40 w-72 rounded-full text-ink opacity-[0.06] blur-[1px]" />
-      <Birds className="pointer-events-none absolute right-10 top-16 w-24 text-ink/40 sm:right-24" />
-      <Birds className="pointer-events-none absolute left-8 top-28 hidden w-16 text-ink/30 sm:block" />
+      <div className="halftone pointer-events-none absolute -right-8 top-8 h-40 w-72 rounded-full text-ink opacity-[0.06] blur-[1px]" />
+      <Birds className="pointer-events-none absolute left-6 top-10 w-16 text-ink/30 sm:left-10 sm:w-20" />
+      <Birds className="pointer-events-none absolute right-8 top-24 hidden w-14 text-ink/25 lg:block" />
 
-      {/* Copy — sits in clear sky above the sea. */}
-      <div className="relative z-20 mx-auto max-w-3xl px-5 pt-16 text-center sm:pt-24">
-        <p className="reveal tape inline-block px-3 py-1 font-mono text-[11px] uppercase tracking-[0.25em] text-ink">
-          Est. 2026 — a writing-first joint
-        </p>
+      <div className="mx-auto max-w-5xl px-5 pb-32 pt-12 sm:pb-36 sm:pt-16">
+        <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
+          {/* Copy — sits in clear sky, left of the sun. */}
+          <div className="relative z-20">
+            <p className="reveal tape inline-block px-3 py-1 font-mono text-[11px] uppercase tracking-[0.25em] text-ink">
+              Est. 2026 · a writing-first joint
+            </p>
 
-        <h1 className="mt-7 font-body text-ink">
-          <span
-            className="reveal block text-4xl italic leading-[1.05] sm:text-5xl"
-            style={{ animationDelay: "0.08s" }}
-          >
-            Comfort, nostalgia,
-          </span>
-          <span
-            className="reveal mt-2 block font-poster text-6xl uppercase leading-[0.9] tracking-tight text-vermillion ink-press sm:text-8xl"
-            style={{ animationDelay: "0.16s" }}
-          >
-            &amp; limited hours
-          </span>
-        </h1>
+            <h1 className="mt-6 font-body text-ink">
+              <span
+                className="reveal block pb-1 text-3xl italic leading-[1.12] sm:text-4xl lg:text-5xl"
+                style={{ animationDelay: "0.08s" }}
+              >
+                Comfort, nostalgia,
+              </span>
+              <span
+                className="reveal ink-press mt-1 block font-poster text-5xl uppercase leading-[0.9] tracking-tight text-vermillion sm:text-6xl lg:text-7xl"
+                style={{ animationDelay: "0.16s" }}
+              >
+                &amp; limited hours
+              </span>
+            </h1>
 
-        <p
-          className="reveal mx-auto mt-6 max-w-xl font-body text-lg leading-relaxed text-ink-soft"
-          style={{ animationDelay: "0.24s" }}
-        >
-          Video games, anime, and music — from a 90s kid with the little one
-          finally asleep down the hall. No hype, no scores. Just what&apos;s
-          worth your nights.
-        </p>
+            <p
+              className="reveal mt-5 max-w-md font-body text-lg leading-relaxed text-ink-soft"
+              style={{ animationDelay: "0.24s" }}
+            >
+              Video games, anime, and music, from a 90s kid with the little one
+              finally asleep. No hype, no scores.
+            </p>
 
-        <div
-          className="reveal mt-8 flex items-center justify-center gap-5"
-          style={{ animationDelay: "0.32s" }}
-        >
-          <a
-            href="#latest"
-            className="border-2 border-ink bg-ink px-5 py-2.5 font-mono text-xs uppercase tracking-[0.2em] text-paper transition-colors hover:border-vermillion hover:bg-vermillion"
-          >
-            Start the spin
-          </a>
-          <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-soft">
-            Side A · 33⅓
-          </span>
+            <div
+              className="reveal mt-8"
+              style={{ animationDelay: "0.32s" }}
+            >
+              <a
+                href="#latest"
+                className="inline-block border-2 border-ink bg-ink px-6 py-3 font-mono text-xs uppercase tracking-[0.2em] text-paper transition-all hover:border-vermillion hover:bg-vermillion active:translate-y-px"
+              >
+                Start the spin
+              </a>
+            </div>
+          </div>
+
+          {/* The sun. Drops into the sea below on wide screens. */}
+          <div className="relative z-0 lg:-mb-20">
+            <div
+              className="reveal relative mx-auto w-[220px] sm:w-[270px] lg:mr-0 lg:w-[330px]"
+              style={{ animationDelay: "0.2s" }}
+            >
+              {/* Warm sun glow behind the record. */}
+              <div
+                className="absolute inset-0 scale-[1.4] rounded-full blur-2xl"
+                style={{ background: "rgba(194,150,47,0.28)" }}
+              />
+              <SunRecord />
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* The scene — rising sun over the sea. */}
-      <div className="relative mt-10 h-[260px] sm:h-[340px]">
+      {/* The seigaiha sea — layered for depth, crosses in front of the sun. */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10">
         <div
-          className="reveal absolute bottom-[78px] left-1/2 w-[230px] -translate-x-1/2 sm:bottom-[96px] sm:w-[320px]"
-          style={{ animationDelay: "0.2s" }}
-        >
-          {/* Warm sun glow behind the record. */}
-          <div
-            className="absolute inset-0 scale-[1.4] rounded-full blur-2xl"
-            style={{ background: "rgba(194,150,47,0.28)" }}
-          />
-          <SunRecord />
-        </div>
-
-        {/* The seigaiha sea — layered for depth, covers the sun's base. */}
-        <div className="absolute inset-x-0 bottom-0">
-          <div
-            className="seigaiha h-14 text-indigo opacity-80"
-            style={{ backgroundSize: "60px 30px" }}
-          />
-          <div
-            className="seigaiha -mt-3 h-16 text-indigo opacity-90"
-            style={{ backgroundSize: "84px 42px" }}
-          />
-          <div
-            className="seigaiha -mt-3 h-20 text-indigo-deep"
-            style={{ backgroundSize: "116px 58px" }}
-          />
-        </div>
+          className="seigaiha h-12 text-indigo opacity-80"
+          style={{ backgroundSize: "60px 30px" }}
+        />
+        <div
+          className="seigaiha -mt-3 h-14 text-indigo opacity-90"
+          style={{ backgroundSize: "84px 42px" }}
+        />
+        <div
+          className="seigaiha -mt-3 h-16 text-indigo-deep"
+          style={{ backgroundSize: "116px 58px" }}
+        />
       </div>
     </section>
   );

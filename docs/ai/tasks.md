@@ -18,17 +18,37 @@ Active work. Update as items are completed and new work is identified.
 - [x] Phase 2 — Respect Due (candlelit hall of honor) — 2026-06-11
 - [x] Bonus — Backlog engagement: click a save slot → game detail panel (getGameDetails in igdb.ts + client SaveSlotGrid; build-time data, instant UI) — 2026-06-11
 - [ ] Phase 2 — Worth Your Hours? (time-clock bureau) — M ← NEXT
-- [ ] Phase 2 — Next Round (open-mic marquee) — M
+- [ ] Phase 2 — Next Round (open-mic stage; NOT a marquee, see below) — M
 - [ ] Phase 2 — On Tap (taproom + live IGDB watchlist, ISR daily) — L
 - [ ] Phase 3 — `/columns` index (record-crate contact sheet) — S
 
-> Note: 4 commits sitting on local `main` ahead of origin (premium pass,
-> Rewind, Respect Due + Backlog details, docs) — user pushes/deploys himself.
+## Visual Uplift (2026-07-26) — shared surfaces + reading page
+
+- [x] Hero recomposed as an asymmetric split so the sun-record scene shares the
+      first screen with the copy (was landing ~970px down, cut off on laptops)
+- [x] Sleeve art on the main surfaces: `lib/art.ts` resolves one cover per post
+      from IGDB/AniList/iTunes; `PostArtwork` renders it at native ratio with a
+      white-label monogram sleeve as the fallback
+- [x] Optional `art: { game | anime | album }` post frontmatter; Nightcap posts
+      derive art from their own picks, so no content edits were needed
+- [x] Home section rhythm: four distinct layout families instead of three
+      repeats of header-plus-bordered-rows; Latest grid takes exactly as many
+      columns as there are posts
+- [x] Reading page: record-sleeve header, drop cap, real pull quotes
+      (this closes the "Article/reading page polish" item)
+- [x] Removed the scrolling ticker strip above the masthead — user's call,
+      "AI slop." Header went 92px → 56px. `.marquee-track` CSS deleted with it.
+- [x] Bug: AniList `large` serves the /medium/ file (107px). Switched to
+      `extraLarge` (460px) — also fixes covers in the bespoke Nightcap column.
+- [x] Bug: italic hero headline was clipping the descender in "nostalgia,"
+- [x] Nav height brought under the 80px cap (now 56px)
 
 ## Up Next (after campaign)
 
-- [ ] Article/reading page polish — drop caps, pull quotes, margin notes, record-sleeve header — M
 - [ ] About manifesto page — rewrite from plain text into the real "why" — S
+- [ ] Decide: strip em-dashes site-wide, or keep them in article prose? UI
+      chrome is already clear of them; author copy and `columnThemes` manifestos
+      were left alone deliberately — S
 
 ## Blocked
 

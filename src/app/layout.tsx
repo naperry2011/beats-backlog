@@ -41,7 +41,7 @@ const seal = Noto_Serif_JP({
 export const metadata: Metadata = {
   title: "Beats and Backlog",
   description:
-    "A writing-first corner for video games, anime, and music — comfort, nostalgia, and limited hours.",
+    "A writing-first corner for video games, anime, and music: comfort, nostalgia, and limited hours.",
 };
 
 export default function RootLayout({

@@ -6,10 +6,14 @@ const ANILIST_URL = "https://graphql.anilist.co";
 
 const coverCache = new Map<string, string | null>();
 
+// AniList's size names are shifted one step down from what they suggest:
+// `large` serves the /medium/ file (107px wide) and `extraLarge` serves the
+// /large/ one. Ask for extraLarge, keep large as the fallback.
 const QUERY = `
 query ($search: String) {
   Media(search: $search, type: ANIME) {
     coverImage {
+      extraLarge
       large
     }
   }
@@ -33,7 +37,8 @@ export async function getAnimeCover(title: string): Promise<string | null> {
       return null;
     }
     const data = await res.json();
-    const url: string | null = data?.data?.Media?.coverImage?.large ?? null;
+    const cover = data?.data?.Media?.coverImage;
+    const url: string | null = cover?.extraLarge ?? cover?.large ?? null;
     coverCache.set(title, url);
     return url;
   } catch {
