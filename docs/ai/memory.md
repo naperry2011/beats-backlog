@@ -71,4 +71,4 @@ Static-first Next.js App Router site, no database. Content is MDX files in `cont
 - Art direction (composition, texture, printed-mark motifs) — not font choice — is what separated "authentic" from "AI-generic" here.
 - IGDB names remakes identically to originals; pin specific editions with a release-year (`since`) filter, not search strings.
 - Next 16 defaults to Turbopack; pass remark plugins to `@next/mdx` in string form so they serialize.
-- Only one `next dev` per project dir — the preview tool and a manual `:3007` server conflict.
+- Only one `next dev` per project dir. The dev server now defaults to `:3007` (`npm run dev -- -p 3007`, set in `.claude/launch.json`), so a second server started on that port will conflict with the preview tool.
