@@ -45,12 +45,12 @@ export const COLUMN_THEMES: Record<string, ColumnTheme> = {
     mood: "night",
     accent: "#d6478f",
     glow: "rgba(214,71,143,0.18)",
-    kicker: "Nostalgia retrospectives",
+    kicker: "Records, revisited",
     monogram: "RW",
     manifesto:
-      "The 90s and 2000s stuff, pulled off the shelf and looked at with grown eyes. What held up, what didn't, and what it really meant. Be kind — rewind.",
-    listLabel: "The tapes",
-    emptyLine: "Tracking… first tape soon.",
+      "Albums pulled back out of the crate and played with grown ears. The ones you wore out, the ones you missed, and the ones that turned out to be about something else the whole time.",
+    listLabel: "The crate",
+    emptyLine: "Crate's still being dug through. First record soon.",
     stamp: "Rewind",
   },
   "respect-due": {

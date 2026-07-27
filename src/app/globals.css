@@ -249,48 +249,6 @@ body::after {
   animation: steam 3.2s ease-out 2.2s infinite;
 }
 
-/* Rewind — VHS tracking band drifting down the screen, and a title jitter
-   like a tape seeking. Both reduced-motion guarded below. */
-@keyframes tracking {
-  0% {
-    top: -8%;
-    opacity: 0;
-  }
-  8% {
-    opacity: 0.5;
-  }
-  92% {
-    opacity: 0.5;
-  }
-  100% {
-    top: 108%;
-    opacity: 0;
-  }
-}
-.tracking-band {
-  animation: tracking 7s linear infinite;
-}
-
-@keyframes vhs-jitter {
-  0%,
-  93%,
-  100% {
-    transform: translateX(0) skewX(0);
-  }
-  94% {
-    transform: translateX(-3px) skewX(-1.5deg);
-  }
-  95.5% {
-    transform: translateX(2px) skewX(1deg);
-  }
-  97% {
-    transform: translateX(-1px) skewX(0);
-  }
-}
-.vhs-jitter {
-  animation: vhs-jitter 6s steps(1) infinite;
-}
-
 /* Respect Due — a candle flame breathing in a still room. */
 @keyframes flicker {
   0%,
@@ -342,8 +300,6 @@ body::after {
   .steam,
   .steam-2,
   .steam-3,
-  .tracking-band,
-  .vhs-jitter,
   .flicker {
     animation: none;
   }

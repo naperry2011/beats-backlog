@@ -40,8 +40,9 @@ export const COLUMNS: Column[] = [
   {
     id: "rewind",
     name: "Rewind",
-    tagline: "Nostalgia retrospectives.",
-    description: "The 90s and 2000s stuff, revisited with grown eyes.",
+    tagline: "Records, revisited.",
+    description:
+      "Music retrospectives. Albums pulled back out of the crate and played with grown ears.",
   },
   {
     id: "respect-due",
