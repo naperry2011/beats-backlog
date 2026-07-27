@@ -17,8 +17,9 @@ Active work. Update as items are completed and new work is identified.
 - [x] Phase 2 — Rewind (video-rental shelf / VHS) — 2026-06-11
 - [x] Phase 2 — Respect Due (candlelit hall of honor) — 2026-06-11
 - [x] Bonus — Backlog engagement: click a save slot → game detail panel (getGameDetails in igdb.ts + client SaveSlotGrid; build-time data, instant UI) — 2026-06-11
-- [ ] Phase 2 — Worth Your Hours? (time-clock bureau) — M ← NEXT
-- [ ] Phase 2 — Next Round (open-mic stage; NOT a marquee, see below) — M
+- [x] Phase 2 — Worth Your Hours? (time-and-motion bureau; reviews filed as
+      punch cards, stopped clock at 9:41, verdict as a rubber stamp) — 2026-07-26
+- [ ] Phase 2 — Next Round (open-mic stage; NOT a marquee, see below) — M ← NEXT
 - [ ] Phase 2 — On Tap (taproom + live IGDB watchlist, ISR daily) — L
 - [ ] Phase 3 — `/columns` index (record-crate contact sheet) — S
 
@@ -42,6 +43,15 @@ Active work. Update as items are completed and new work is identified.
       `extraLarge` (460px) — also fixes covers in the bespoke Nightcap column.
 - [x] Bug: italic hero headline was clipping the descender in "nostalgia,"
 - [x] Nav height brought under the 80px cap (now 56px)
+
+## Open Questions
+
+- [ ] IGDB can return 401 for a lookup mid-build on a token that just served
+      the preceding requests, and stays 401 through every retry. The same
+      sequence against the same credentials succeeds outside the build, so it
+      is not the query, the ordering, or the rate limit; pacing and re-minting
+      the token both failed to fix it. Fails soft to a blank sleeve. Revisit if
+      covers start dropping in production. — P2
 
 ## Up Next (after campaign)
 

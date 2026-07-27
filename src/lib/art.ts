@@ -68,11 +68,15 @@ export async function getPostArt(post: PostMeta): Promise<PostArt | null> {
   return null;
 }
 
+// Resolved one at a time on purpose. The cover services are rate limited and a
+// build already fans out hard elsewhere; a listing is only ever a handful of
+// posts, so the wall-clock cost is negligible next to losing covers to a 429.
 export async function getPostArtMap(
   posts: PostMeta[],
 ): Promise<Record<string, PostArt | null>> {
-  const entries = await Promise.all(
-    posts.map(async (p) => [p.slug, await getPostArt(p)] as const),
-  );
-  return Object.fromEntries(entries);
+  const out: Record<string, PostArt | null> = {};
+  for (const post of posts) {
+    out[post.slug] = await getPostArt(post);
+  }
+  return out;
 }

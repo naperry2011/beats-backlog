@@ -8,6 +8,7 @@ import { ComfortModeColumn } from "@/components/ComfortModeColumn";
 import { BacklogColumn } from "@/components/BacklogColumn";
 import { RewindColumn } from "@/components/RewindColumn";
 import { RespectDueColumn } from "@/components/RespectDueColumn";
+import { WorthYourHoursColumn } from "@/components/WorthYourHoursColumn";
 import { ColumnLayout } from "@/components/ColumnLayout";
 
 export const dynamicParams = false;
@@ -24,7 +25,7 @@ export async function generateMetadata({
   const { column } = await params;
   const col = getColumn(column);
   if (!col) return {};
-  return { title: `${col.name} — Beats and Backlog`, description: col.tagline };
+  return { title: `${col.name} · Beats and Backlog`, description: col.tagline };
 }
 
 export default async function ColumnPage({
@@ -61,6 +62,11 @@ export default async function ColumnPage({
   // Respect Due is a candlelit hall of honor.
   if (col.id === "respect-due") {
     return <RespectDueColumn posts={posts} />;
+  }
+
+  // Worth Your Hours? is a time-and-motion bureau; reviews are punch cards.
+  if (col.id === "worth-your-hours") {
+    return <WorthYourHoursColumn posts={posts} />;
   }
 
   // Every other column renders through the themed layout (per-column identity).

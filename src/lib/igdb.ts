@@ -9,11 +9,12 @@ const GAMES_URL = "https://api.igdb.com/v4/games";
 let cachedToken: { token: string; expires: number } | null = null;
 const coverCache = new Map<string, string | null>();
 
-async function getToken(): Promise<string | null> {
+// `force` skips the cache so a 401 can retry with a freshly minted token.
+async function getToken(force = false): Promise<string | null> {
   const id = process.env.TWITCH_CLIENT_ID;
   const secret = process.env.TWITCH_CLIENT_SECRET;
   if (!id || !secret) return null;
-  if (cachedToken && cachedToken.expires > Date.now() + 60_000) {
+  if (!force && cachedToken && cachedToken.expires > Date.now() + 60_000) {
     return cachedToken.token;
   }
   try {
@@ -23,6 +24,7 @@ async function getToken(): Promise<string | null> {
     );
     if (!res.ok) return null;
     const data = await res.json();
+    if (!data?.access_token) return null;
     cachedToken = {
       token: data.access_token,
       expires: Date.now() + (data.expires_in ?? 3600) * 1000,
@@ -31,6 +33,81 @@ async function getToken(): Promise<string | null> {
   } catch {
     return null;
   }
+}
+
+// IGDB documents a limit of about 4 requests a second, and nothing here used to
+// pace itself, so a build fired lookups back to back. Every request now goes
+// through one chain with a minimum gap to stay inside that limit.
+//
+// Known unresolved: during a build, a lookup can still come back 401
+// "Authorization Failure" on the same token that served the preceding requests
+// fine, and it stays 401 through every retry. The identical request sequence
+// against the same credentials succeeds outside the build, so it is not the
+// query, the ordering, or the request rate. Neither pacing nor re-minting the
+// token fixes it. It fails soft to a blank sleeve, so it costs a cover and not
+// a build. Worth another look if covers start disappearing in production.
+const MIN_GAP_MS = 280;
+let chain: Promise<unknown> = Promise.resolve();
+let lastRequestAt = 0;
+
+function schedule<T>(job: () => Promise<T>): Promise<T> {
+  const run = chain.then(async () => {
+    const wait = MIN_GAP_MS - (Date.now() - lastRequestAt);
+    if (wait > 0) await new Promise((r) => setTimeout(r, wait));
+    lastRequestAt = Date.now();
+    return job();
+  });
+  // Keep the chain alive even if this job rejects.
+  chain = run.then(
+    () => undefined,
+    () => undefined,
+  );
+  return run;
+}
+
+// Retries throttled/transient failures with backoff, and refreshes the token
+// once on a 401 in case it really was the credentials. Callers still get null
+// on a genuine miss, and the build never breaks on a cover.
+async function igdbFetch(
+  id: string,
+  body: string,
+  attempts = 4,
+): Promise<Response | null> {
+  let token = await getToken();
+  if (!token) return null;
+  let refreshed = false;
+
+  for (let attempt = 0; attempt < attempts; attempt++) {
+    try {
+      const res = await schedule(() =>
+        fetch(GAMES_URL, {
+          method: "POST",
+          headers: {
+            "Client-ID": id,
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+          body,
+        }),
+      );
+      if (res.ok) return res;
+
+      if (res.status === 401 && !refreshed) {
+        refreshed = true;
+        const fresh = await getToken(true);
+        if (fresh) token = fresh;
+      } else if (res.status !== 401 && res.status !== 429 && res.status < 500) {
+        // A real client error. Retrying won't change the answer.
+        return null;
+      }
+    } catch {
+      // Network hiccup — treat like a transient failure and retry.
+    }
+    if (attempt < attempts - 1) {
+      await new Promise((r) => setTimeout(r, 400 * 2 ** attempt));
+    }
+  }
+  return null;
 }
 
 // Returns a t_cover_big URL for the best match of `query`, or null.
@@ -44,8 +121,7 @@ export async function getGameCover(
   if (coverCache.has(cacheKey)) return coverCache.get(cacheKey)!;
 
   const id = process.env.TWITCH_CLIENT_ID;
-  const token = await getToken();
-  if (!id || !token) {
+  if (!id) {
     coverCache.set(cacheKey, null);
     return null;
   }
@@ -55,16 +131,11 @@ export async function getGameCover(
     : "";
 
   try {
-    const res = await fetch(GAMES_URL, {
-      method: "POST",
-      headers: {
-        "Client-ID": id,
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-      },
-      body: `search "${query.replace(/"/g, "")}"; fields name,cover.image_id;${where} limit 5;`,
-    });
-    if (!res.ok) {
+    const res = await igdbFetch(
+      id,
+      `search "${query.replace(/"/g, "")}"; fields name,cover.image_id;${where} limit 5;`,
+    );
+    if (!res) {
       coverCache.set(cacheKey, null);
       return null;
     }
@@ -112,8 +183,7 @@ export async function getGameDetails(
   if (detailsCache.has(cacheKey)) return detailsCache.get(cacheKey)!;
 
   const id = process.env.TWITCH_CLIENT_ID;
-  const token = await getToken();
-  if (!id || !token) {
+  if (!id) {
     detailsCache.set(cacheKey, null);
     return null;
   }
@@ -123,20 +193,14 @@ export async function getGameDetails(
     : "";
 
   try {
-    const res = await fetch(GAMES_URL, {
-      method: "POST",
-      headers: {
-        "Client-ID": id,
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-      },
-      body:
-        `search "${query.replace(/"/g, "")}"; ` +
+    const res = await igdbFetch(
+      id,
+      `search "${query.replace(/"/g, "")}"; ` +
         `fields name,summary,first_release_date,genres.name,` +
         `involved_companies.company.name,involved_companies.developer,` +
         `cover.image_id;${where} limit 5;`,
-    });
-    if (!res.ok) {
+    );
+    if (!res) {
       detailsCache.set(cacheKey, null);
       return null;
     }
