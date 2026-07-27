@@ -15,14 +15,15 @@ Beats and Backlog is a writing-first publication about video games, anime, and m
 
 ## Now
 
+- Real content across the columns, drawn from what Perry has actually finished
+- Remaining bespoke column worlds: Next Round, On Tap — planned
 - About manifesto page (Dilla/Nujabes/Champloo lineage, the voice) — planned
-- Remaining bespoke column worlds: Worth Your Hours?, Next Round, On Tap — planned
 
 ## Next
 
 - On Tap (curated upcoming-releases watchlist via IGDB — release dates + covers, ISR daily) — planned
 - `/columns` index page (record-crate contact sheet of all 8) — planned
-- Remaining themed columns could graduate to bespoke worlds (Rewind, Respect Due, Next Round, On Tap)
+- Remaining themed columns graduate to bespoke worlds (Next Round, On Tap)
 
 ## Later
 
@@ -33,6 +34,8 @@ Beats and Backlog is a writing-first publication about video games, anime, and m
 
 ## Recently Completed
 
+- Worth Your Hours? bureau world; Rewind rebuilt as a music column — 2026-07-26
+- First real posts: BG3, Time Stranger, MGS3, Prince 1979 — 2026-07-26
 - Visual uplift: hero recomposition, sleeve art on posts, reading-page furniture — 2026-07-26
 - IGDB cover integration + remake pinning — 2026-06-08
 - Bespoke Nightcap / Comfort Mode / Backlog + seal system — 2026-06-08

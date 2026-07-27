@@ -5,8 +5,11 @@ Running history of what's been built and current state. Update after major chang
 ## Current State
 
 **Status:** Active Development
-**Last Updated:** 2026-06-08
-**Version:** pre-launch; committed to git (initial commit on `main`)
+**Last Updated:** 2026-07-26
+**Version:** pre-launch, deployed. 6 of 8 columns have bespoke worlds (Nightcap,
+Comfort Mode, Backlog, Rewind, Respect Due, Worth Your Hours?); Next Round and
+On Tap still render through the themed `ColumnLayout`. 6 posts, 4 of them real
+and 2 still placeholders that admit it in their own body text.
 
 ### What's Working
 - Next.js 16 (App Router) + TypeScript + Tailwind v4 + MDX skeleton; `npm run build` passes.
@@ -27,6 +30,21 @@ Running history of what's been built and current state. Update after major chang
 - Nothing actively mid-edit. Candidate next work below.
 
 ## Implementation History
+
+### 2026-07-26 — Worth Your Hours? world, Rewind pivots to music, first real posts
+**What was built:** Worth Your Hours? as a time-and-motion bureau (reviews filed
+as punch cards, stopped clock at 9:41, Verdict as a rubber stamp). Rewind was
+then rebuilt from the video store into a used-record-shop crate after Perry
+made it a music-only column; entries there lead with cover art now. Four real
+posts landed: BG3 and Digimon Time Stranger (Worth Your Hours?), MGS3 (The
+Backlog), and the 1979 Prince self-titled (Rewind).
+**Why:** The site's design had run well ahead of its writing, and Rewind's
+video-store identity contradicted its new music-only remit.
+**Fixed:** IGDB cover selection preferred whatever ranked first, which meant
+DLC and special-edition art; now prefers exact name match, then shortest title.
+IGDB requests are paced and retried.
+**Files affected:** WorthYourHoursColumn.tsx (new), RewindColumn.tsx (rewritten),
+columns.ts, columnThemes.ts, igdb.ts, art.ts, globals.css, content/posts/*
 
 ### 2026-07-26 — Visual uplift (shared surfaces + reading page)
 **What was built:** Hero recomposed as an asymmetric split so the sun-record
