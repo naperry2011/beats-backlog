@@ -110,6 +110,31 @@ async function igdbFetch(
   return null;
 }
 
+// IGDB search happily ranks a costume pack or a "Limited Metal Edition" above
+// the game itself, and taking the first result with a cover meant shipping DLC
+// art. Prefer an exact name match; failing that, the shortest title, since
+// editions and add-ons are the base name with something appended.
+function pickCover(
+  rows: Array<{ name?: string; cover?: { image_id?: string } }>,
+  query: string,
+): string | undefined {
+  const withCover = rows.filter((g) => g.cover?.image_id);
+  if (withCover.length === 0) return undefined;
+
+  const norm = (s: string) =>
+    s
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim();
+
+  const exact = withCover.find((g) => g.name && norm(g.name) === norm(query));
+  if (exact) return exact.cover!.image_id;
+
+  return withCover.reduce((best, g) =>
+    (g.name?.length ?? Infinity) < (best.name?.length ?? Infinity) ? g : best,
+  ).cover!.image_id;
+}
+
 // Returns a t_cover_big URL for the best match of `query`, or null.
 // `since` (a year) filters to releases on/after that year — use it to pin a
 // remake when a title is shared with its original (e.g. Resident Evil 4).
@@ -139,8 +164,9 @@ export async function getGameCover(
       coverCache.set(cacheKey, null);
       return null;
     }
-    const data: Array<{ cover?: { image_id?: string } }> = await res.json();
-    const imageId = data.find((g) => g.cover?.image_id)?.cover?.image_id;
+    const data: Array<{ name?: string; cover?: { image_id?: string } }> =
+      await res.json();
+    const imageId = pickCover(data, query);
     const url = imageId
       ? `https://images.igdb.com/igdb/image/upload/t_cover_big/${imageId}.jpg`
       : null;
