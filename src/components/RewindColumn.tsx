@@ -113,7 +113,7 @@ export function RewindColumn({ posts }: { posts: PostMeta[] }) {
               boxShadow: "inset 0 0 0 2px rgba(240,230,218,0.4)",
             }}
           >
-            Be kind — rewind
+            Be kind, rewind
           </span>
         </div>
       </section>
